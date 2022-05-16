@@ -26,15 +26,13 @@ def conta(request, pk):
         data.update({
             'pesquisa': pesquisa
         })
-        data_saida = filter_by_model_date(Saida, mes, ano)
-        data_entrada = filter_by_model_date(Entrada, mes, ano)
-        conta_entrada = filter_by_conta(data_entrada, conta)  # Filtro dos Logs de Entrada por conta
-        conta_saida = filter_by_conta(data_saida, conta)  # Filtro dos Logs de Saida por conta
-        soma = sum_parcelas(conta_saida)
-        fatura = sum_faturas(conta_entrada)
+        data_saida = filter_by_model_date_conta(Saida, mes, ano, conta)
+        data_entrada = filter_by_model_date_conta(Entrada, mes, ano, conta)
+        soma = sum_parcelas(data_saida)
+        fatura = sum_faturas(data_entrada)
         soma -= fatura
         data.update({
-            'saida': conta_saida, 'fatura': soma, 'entrada': conta_entrada
+            'saida': data_saida, 'fatura': soma, 'entrada': data_entrada
         })
         if conta.tipo != "Crédito":
             is_valid_saida(saida, conta)
