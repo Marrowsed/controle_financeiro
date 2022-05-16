@@ -1,0 +1,175 @@
+{% include '_head.html' %}
+{% load humanize %}
+{% load static %}
+</head>
+<body>
+{% include '_nav.html' %}
+<div class="ml-3">
+<h1>{{conta.banco}} - {{conta.tipo}}</h1>
+
+<section class="container-md border border-1 shadow-sm p-3 my-3">
+    <form method="GET" class="form">
+        <p class="form-message">Selecione o mês</p>
+        <input type="month" id="month" name="mes" value="{{pesquisa}}" required>
+        <button type="submit" class="btn btn-info">Escolher o Mês</button>
+      </form>
+</section>
+
+<div class="row">
+  {% if conta.tipo != "Crédito" %}
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            {% if conta.valor > 0 %}
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+            {%else%}
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            {%endif%}
+              {{conta.tipo}}</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.valor}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            {% if conta.limite > 0 %}
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+            {%else%}
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            {%endif%}
+              Limite</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            {%if conta.limite_usado < conta.limite %}
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+             {%else%}
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            {%endif%}
+              Uso Limite</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_usado}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            {%if conta.limite_usado < conta.limite %}
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+             {%else%}
+            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+            {%endif%}
+              Limite Restante</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_restante}}</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary shadow h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+              Fatura</div>
+            {% if fatura != Null %}
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{fatura|floatformat:2|intcomma}}</div>
+            {% else %}
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R$0</div>
+            {% endif%}
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<a href="{% url 'adiciona_entrada' conta.id %}" type="button" class="btn btn-success mx-auto rounded-pill">Adicionar Entrada</a>
+<h1 class="mx-auto">Entradas</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tipo</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Data</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for e in entrada %}
+    <tr>
+      <th scope="row">{{ e.tipo }}</th>
+      <td>{{e.nome}}</td>
+      <td>R${{e.valor}}</td>
+      <td>{{e.data}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'adiciona_saida' conta.id %}" type="button" class="btn btn-success mx-auto rounded-pill">Adicionar Saída</a>
+<h1 class="mx-auto">Saídas</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tipo</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Parcelas</th>
+      <th scope="col">Data</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for s in saida %}
+    <tr>
+      <th scope="row">{{ s.tipo }}</th>
+      <td>{{s.nome}}</td>
+      <td>R${{s.valor}}</td>
+      <td>{{s.parcela}}</td>
+      <td>{{s.data}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% include '_boot.html' %}
+</body>
+</html>

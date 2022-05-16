@@ -1,0 +1,30 @@
+{% include '_head.html' %}
+{% load static %}
+</head>
+<body>
+{% include '_nav.html' %}
+
+<div class="row ml-4">
+{% for c in conta %}
+  <div class="col-sm-4 mb-4">
+    <div class="card mr-3" style="width: 18rem;">
+      {% if c.banco.foto != ""%}
+      <img class="card-img-top img-fluid img-thumbnail mx-auto d-block" src="{{c.banco.foto.url}}" alt="Foto do Banco">
+      {% else%}
+      <img class="card-img-top img-fluid img-thumbnail mx-auto d-block" src="#" alt="Foto do Banco">
+      {%endif%}
+      <div class="card-body">
+        <h5 class="card-title">{{c}}</h5>
+        <p class="card-text">Conta {{c.tipo}} do {{c.banco}}</p>
+          <div class="text-center">
+            <a href="{% url 'conta' c.id %}" class="btn btn-primary">Entrar</a>
+            <a href="{% url 'edita_conta' c.id %}" class="btn btn-warning">Editar</a>
+          </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% include '_boot.html' %}
+</body>
+</html>
