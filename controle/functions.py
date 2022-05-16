@@ -65,25 +65,11 @@ def is_valid_entrada(entrada, conta):
     return conta.valor
 
 
-def filter_by_conta(model, field):
+def filter_by_model_date_conta(model, month, year,field):
     """
-    Filtro dos Logs por conta
+    Fitro por Model para data/mês e conta
     """
-    return model.filter(conta=field)
-
-
-def filter_by_else(model, field):
-    """
-    Else do filtro dos Logs por conta
-    """
-    return model.objects.filter(conta=field)
-
-
-def filter_by_model_date(model, month, year):
-    """
-    Fitro por Model para data/mês
-    """
-    return model.objects.filter(data__month=month, data__year=year)
+    return model.objects.filter(data__month=month, data__year=year, conta=field)
 
 
 def check_final_date(data, parcela):
