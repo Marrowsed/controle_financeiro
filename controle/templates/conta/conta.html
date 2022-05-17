@@ -162,8 +162,39 @@
       <th scope="row">{{ s.tipo }}</th>
       <td>{{s.nome}}</td>
       <td>R${{s.valor}}</td>
+      {% if s.parcela > 1 %}
+      <td>1/{{s.parcela}}</td>
+      {% else %}
       <td>{{s.parcela}}</td>
+      {% endif %}
       <td>{{s.data}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<h1 class="mx-auto">Parcelas Restantes</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tipo</th>
+      <th scope="col">Descrição</th>
+      <th scope="col">Valor</th>
+      <th scope="col">Parcelas</th>
+      <th scope="col">Data</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for p in parcela %}
+    <tr>
+      <th scope="row">{{ p.tipo }}</th>
+      <td>{{p.nome}}</td>
+      <td>R${{p.valor}}</td>
+      {% if p.parcela > 1 %}
+      <td>1/{{p.parcela}}</td>
+      {% else %}
+      <td>{{p.parcela}}</td>
+      {% endif %}
+      <td>{{p.data}}</td>
     </tr>
     {% endfor %}
   </tbody>
