@@ -13,7 +13,7 @@ def index(request):
 
 
 def conta(request, pk):
-    pesquisa = f"{datetime.now().year} - {datetime.now().month:02}"
+    pesquisa = f"{datetime.now().year}-{datetime.now().month:02}"
     conta = Conta.objects.get(id=pk)
     saida = sum_total_conta(Saida, conta)
     entrada = sum_total_conta(Entrada, conta)
@@ -28,11 +28,16 @@ def conta(request, pk):
         })
         data_saida = filter_by_model_date_conta(Saida, mes, ano, conta)
         data_entrada = filter_by_model_date_conta(Entrada, mes, ano, conta)
-        soma = sum_parcelas(data_saida)
-        fatura = sum_faturas(data_entrada)
-        soma -= fatura
+        list_parcelado = check_is_parcelado(Saida, conta, ano, mes)
+
         data.update({
-            'saida': data_saida, 'fatura': soma, 'entrada': data_entrada
+            'parcela': list_parcelado
+        })
+        soma_saida = sum_saida(data_saida, list_parcelado, data_saida)
+        soma_entrada = sum_faturas(data_entrada)
+        soma_fatura = soma_saida - soma_entrada
+        data.update({
+            'saida': data_saida, 'fatura': soma_fatura, 'entrada': data_entrada
         })
         if conta.tipo != "Crédito":
             is_valid_saida(saida, conta)
