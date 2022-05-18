@@ -1,10 +1,15 @@
 {% include '_head.html' %}
 {% load humanize %}
 {% load static %}
+<style>
+  th, td {
+  text-align: center;
+  }
+</style>
 </head>
 <body>
 {% include '_nav.html' %}
-<div class="ml-3">
+<div>
 <h1>{{conta.banco}} - {{conta.tipo}}</h1>
 
 <section class="container-md border border-1 shadow-sm p-3 my-3">
@@ -49,7 +54,7 @@
             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
             {%endif%}
               Limite</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite}}</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite|floatformat:2|intcomma}}</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -69,7 +74,7 @@
             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
             {%endif%}
               Uso Limite</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_usado}}</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_usado|floatformat:2|intcomma}}</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -89,7 +94,7 @@
             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
             {%endif%}
               Limite Restante</div>
-            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_restante}}</div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">R${{conta.limite_restante|floatformat:2|intcomma}}</div>
           </div>
           <div class="col-auto">
             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
