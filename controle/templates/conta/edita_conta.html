@@ -1,0 +1,43 @@
+{% include '_head.html' %}
+</head>
+<body>
+{% include '_nav.html' %}
+
+<div class="container">
+  <h2>Editar {{conta}}</h2>
+  <form method="post" class="was-validated">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="tipo">Tipo</label>
+      <input type="text" class="form-control" id="tipo" value="{{conta.tipo}}" name="tipo" readonly>
+    </div>
+      {% if conta.tipo == "Crédito" %}
+    <div class="form-group">
+      <label for="limite">Limite</label>
+      <input type="number" class="form-control" id="limite" value="{{conta.limite}}" name="limite" required>
+      <div class="valid-feedback">Limite Válido</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+      {% else %}
+    <div class="form-group">
+      <label for="valor">Valor {{conta.tipo}}</label>
+      <input type="number" class="form-control" id="valor" value="{{conta.valor}}" name="valor" required>
+      <div class="valid-feedback">Valor Válido</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+      {% endif %}
+    <div class="form-group">
+      <label for="banco">Banco</label>
+      <input type="text" class="form-control" id="banco" placeholder="{{conta.banco}}" name="banco" readonly>
+    </div>
+    <div class="form-group">
+        <label for="foto">Foto do Banco</label>
+        <img src="{{conta.banco.foto.url}}" class="img-fluid" alt="Foto do Banco" id="foto" name="foto">
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+</div>
+
+{% include '_boot.html' %}
+</body>
+</html>
