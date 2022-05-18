@@ -1,0 +1,44 @@
+{% include '_head.html' %}
+<style>
+  th, td {
+  text-align: center;
+  }
+</style>
+</head>
+<body>
+{% include '_nav.html' %}
+
+
+<a href="#" type="button" class="btn btn-success mx-auto rounded-pill">Adicionar Conta</a>
+<h1 class="mx-auto">Contas</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tipo</th>
+      <th scope="col">Limite</th>
+      <th scope="col">Limite Usado</th>
+      <th scope="col">Limite Restante</th>
+      <th scope="col">Valor Corrente</th>
+      <th scope="col">Banco</th>
+      <th scope="col" colspan="2">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in conta %}
+    <tr>
+      <th scope="row">{{ c.tipo }}</th>
+      <td>R${{c.limite}}</td>
+      <td>R${{c.limite_usado}}</td>
+      <td>R${{c.limite_restante}}</td>
+      <td>R${{c.valor}}</td>
+      <td>{{c.banco}}</td>
+      <td><a href="{% url 'edita_conta' c.id%}" type="button" class="btn btn-info">Editar</a></td>
+      <td><a href="{% url 'deleta_conta' c.id%}" type="button" class="btn btn-danger">Deletar</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include '_boot.html' %}
+</body>
+</html>

@@ -5,7 +5,7 @@ from controle.functions import *
 
 
 def index(request):
-    conta = Conta.objects.all()
+    conta = Conta.objects.all().order_by('banco')
     data = {
         'conta': conta
     }
@@ -15,8 +15,6 @@ def index(request):
 def conta(request, pk):
     pesquisa = f"{datetime.now().year}-{datetime.now().month:02}"
     conta = Conta.objects.get(id=pk)
-    saida = sum_total_conta(Saida, conta)
-    entrada = sum_total_conta(Entrada, conta)
     data = {
         'pesquisa': pesquisa, 'conta': conta
     }
@@ -39,32 +37,45 @@ def conta(request, pk):
         data.update({
             'saida': data_saida, 'fatura': soma_fatura, 'entrada': data_entrada
         })
+        saida = sum_total_conta(Saida, conta)
+        entrada = sum_total_conta(Entrada, conta)
         if conta.tipo != "Crédito":
             is_valid_saida(saida, conta)
             is_valid_entrada(entrada, conta)
         else:
             if is_valid(saida):
                 conta.limite_usado += saida.get('valor_total')
-                conta.limite_restante = conta.limite - conta.limite_usado
+                conta.limite_restante = (conta.limite - conta.limite_usado) - soma_fatura
             else:
                 conta.limite_usado = conta.limite_usado
                 conta.limite_restante = conta.limite_restante
-        # data.update({
-        #   'despesa': saida
-        # })
 
     return render(request, 'conta/conta.html', data)
 
 
 def edita_conta(request, pk):
     conta = Conta.objects.get(id=pk)
+    if request.method == 'POST':
+        if conta.tipo == "Crédito":
+            conta.limite = request.POST['limite']
+        else:
+            conta.valor = request.POST['valor']
+        conta.save()
+        return redirect('index')
     data = {
         'conta': conta
     }
-    return render(request, 'index.html', data)
+    return render(request, 'conta/edita_conta.html', data)
 
 
 def deleta_conta(request, pk):
     conta = Conta.objects.get(id=pk)
     conta.delete()
     return redirect('index')
+
+def list_contas(request):
+    conta = Conta.objects.all().order_by('banco')
+    data ={
+        'conta': conta
+    }
+    return render(request, 'conta/list_contas.html', data)
