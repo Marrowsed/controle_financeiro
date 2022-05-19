@@ -120,7 +120,7 @@ def check_final_date(data, parcela):
     """
     Retorna a data da parcela final
     """
-    return data + timedelta(seconds=parcela * 30 * 24 * 60 * 60)
+    return data + timedelta(seconds=(parcela-1) * 30 * 24 * 60 * 60)
 
 
 def check_is_parcelado(model, field, year, month):
@@ -136,7 +136,7 @@ def check_is_parcelado(model, field, year, month):
             parcela = (int(month) - c.data.month)
             if data_final > replace_month_year(get_date_iso_format(year, month), month, year):
                 if parcela > 0:
-                    c.parcela = f"{parcela}/{c.parcela}"
+                    c.parcela = f"{parcela + 1}/{c.parcela}"
                 else:
                     c.parcela = f"{parcela + 12}/{c.parcela}"
                 c.data = replace_month_year(c.data, month, year)

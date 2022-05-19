@@ -167,7 +167,7 @@
       <th scope="row">{{ s.tipo }}</th>
       <td>{{s.nome}}</td>
       <td>R${{s.valor}}</td>
-      {% if s.parcela > 1 %}
+      {% if s.parcela >= 1 %}
       <td>1/{{s.parcela}}</td>
       {% else %}
       <td>{{s.parcela}}</td>
@@ -194,7 +194,7 @@
       <th scope="row">{{ p.tipo }}</th>
       <td>{{p.nome}}</td>
       <td>R${{p.valor}}</td>
-      {% if p.parcela > 1 %}
+      {% if p.parcela >= 1 %}
       <td>1/{{p.parcela}}</td>
       {% else %}
       <td>{{p.parcela}}</td>
