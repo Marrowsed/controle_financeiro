@@ -15,7 +15,7 @@
       <div class="valid-feedback">Descrição Válida !</div>
       <div class="invalid-feedback">Preencha o campo !</div>
     </div>
-    <div>
+    <div class="form-group">
       <label for="tipo">Tipo</label>
         <select name="tipo" id="tipo" required>
             <option value="Compra">Compra</option>
@@ -50,6 +50,22 @@
         <label for="conta">Conta</label>
         <input type="text" class="form-control" id="conta" name="conta" value="{{conta.tipo}}" readonly>
     </div>
+      {% if conta.tipo == "Corrente" %}
+    <div class="form-group">
+      <label for="conta_destino">Conta Destino</label>
+        <p>Em caso de Transferência entre Contas, Pagamento de Fatura ou Aplicação na Poupança escolha uma conta abaixo !</p>
+        <select name="conta_destino" id="conta_destino">
+            <option value="">-------</option>
+            {% for c in contas %}
+            {% if c != conta %}
+            <option value={{c.id}}>{{c}}</option>
+            {% endif%}
+            {% endfor %}
+        </select>
+      <div class="valid-feedback">Tipo Válido !</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+      {% endif %}
     <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
 </div>
@@ -60,8 +76,6 @@
     {% endfor %}
 </ul>
 {% endif %}
-
-
 
 {% include '_boot.html' %}
 </body>
