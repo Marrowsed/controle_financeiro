@@ -65,16 +65,11 @@ class Saida(models.Model):
     valor = models.FloatField()
     data = models.DateField(default=datetime.today)
     conta = models.ForeignKey(Conta, on_delete=models.CASCADE)
-    '''
-    def save(self, *args, **kwargs):
-        if self.tipo == "Compra Parcelada":
-            self.data = self.data + timedelta(seconds=self.parcela*30*24*60*60)
-            super(Saida, self).save(*args, **kwargs)
-    '''
+
     def __str__(self):
         return self.nome
 
-
+'''
 class Extrato(models.Model):
     TIPO = (
         ('Entrada', 'Entrada'),
@@ -87,3 +82,4 @@ class Extrato(models.Model):
 
     def __str__(self):
         return f"{self.conta} - {self.tipo}"
+'''
