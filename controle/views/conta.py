@@ -37,6 +37,7 @@ def conta(request, pk):
         data.update({
             'saida': data_saida, 'fatura': soma_fatura, 'entrada': data_entrada
         })
+        '''
         saida = sum_total_conta(Saida, conta)
         entrada = sum_total_conta(Entrada, conta)
         if conta.tipo != "Crédito":
@@ -49,6 +50,7 @@ def conta(request, pk):
             else:
                 conta.limite_usado = conta.limite_usado
                 conta.limite_restante = conta.limite_restante
+            '''
 
     return render(request, 'conta/conta.html', data)
 
@@ -73,9 +75,10 @@ def deleta_conta(request, pk):
     conta.delete()
     return redirect('index')
 
+
 def list_contas(request):
     conta = Conta.objects.all().order_by('banco')
-    data ={
+    data = {
         'conta': conta
     }
     return render(request, 'conta/list_contas.html', data)

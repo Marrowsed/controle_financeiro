@@ -5,32 +5,29 @@ from django.shortcuts import redirect
 from controle.models import *
 
 
-def get_error_message_corrente(type, message):
+def get_error_message_corrente(type):
     list_types = ['Compra Parcelada']
     var = [i for i in list_types if i in type]
     if var:
-        messages.error(request, message, extra_tags="alert alert-danger")
-        return redirect('adiciona_saida')
+        return True
     else:
         return False
 
 
-def get_error_message_poupanca(type, message):
+def get_error_message_poupanca(type):
     list_types = ['Transferência']
-    var = [i for i in list_types if i not in type]
+    var = [i for i in list_types if i in type]
     if var:
-        messages.error(request, message, extra_tags="alert alert-danger")
-        return redirect('adiciona_saida')
+        return True
     else:
         return False
 
 
-def get_error_message_credito(type, message):
+def get_error_message_credito(type):
     list_types = ['Pagamento Fatura', 'Transferência', 'Poupança']
     var = [i for i in list_types if i in type]
     if var:
-        messages.error(request, message, extra_tags="alert alert-danger")
-        return redirect('adiciona_saida')
+        return True
     else:
         return False
 
@@ -64,7 +61,6 @@ def create_object_saida(name, type, parcela, final_value, date, account):
 
 
 def actions_credito(tipo, model, value, nome, parcela, data):
-    get_error_message_credito(tipo, "Tipo não permitido !")
     valor = float(value)
     validate_decrease_limite(model, valor)
     model.limite_usado = F('limite_usado') + valor
@@ -75,14 +71,16 @@ def actions_credito(tipo, model, value, nome, parcela, data):
 
 def actions_poupanca(tipo, model, value, nome, parcela, data):
     get_error_message_poupanca(tipo, "Tipo não permitido !")
-    validate_decrease_value(model, value)
-    model.valor = F('valor') - value
+    valor = float(value)
+    validate_decrease_value(model, valor)
+    model.valor = F('valor') - valor
     model.save()
-    create_object_saida(nome, tipo, parcela, value, data, model)
+    create_object_saida(nome, tipo, parcela, valor, data, model)
 
 def actions_corrente(tipo, model, value, nome, parcela, data):
     get_error_message_poupanca(tipo, "Tipo não permitido !")
-    validate_decrease_value(model, value)
-    model.valor = F('valor') - value
+    valor = float(value)
+    validate_decrease_value(model, valor)
+    model.valor = F('valor') - valor
     model.save()
-    create_object_saida(nome, tipo, parcela, value, data, model)
+    create_object_saida(nome, tipo, parcela, valor, data, model)
