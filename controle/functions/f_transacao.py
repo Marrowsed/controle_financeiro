@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.db.models import F
+from django.http import HttpResponse
 from django.shortcuts import redirect
 
 from controle.models import *
@@ -100,13 +101,16 @@ def actions_corrente_saida(tipo, model, value, nome, parcela, data, conta_destin
         send_to_account(conta_destino, model, value, nome, parcela, tipo, data)
     elif tipo == "Pagamento Fatura":
         pay_fatura(conta_destino, model, value, nome, parcela, tipo, data)
-    elif conta_destino is not None:
-        return False
     else:
-        valor = float(value)
-        model.valor = F('valor') - valor
-        model.save()
-        create_object_saida(nome, tipo, parcela, valor, data, model)
+        if conta_destino == "":
+            print("WTF ?!")
+            valor = float(value)
+            model.valor = F('valor') - valor
+            model.save()
+            create_object_saida(nome, tipo, parcela, valor, data, model)
+        else:
+            return False
+    return True
 
 
 # FUNCTIONS FOR ENTRADA

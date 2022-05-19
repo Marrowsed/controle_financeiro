@@ -55,7 +55,7 @@
       <label for="conta_destino">Conta Destino</label>
         <p>Em caso de Transferência entre Contas, Pagamento de Fatura ou Aplicação na Poupança escolha uma conta abaixo !</p>
         <select name="conta_destino" id="conta_destino">
-            <option value="">-------</option>
+            <option value=""></option>
             {% for c in contas %}
             {% if c != conta %}
             <option value={{c.id}}>{{c}}</option>
