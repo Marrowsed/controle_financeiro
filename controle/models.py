@@ -37,6 +37,7 @@ class Entrada(models.Model):
     TIPO = (
         ('Salário', 'Salário'),
         ('Transferência', 'Transferência'),
+        ('Poupança', 'Poupança'),
         ('Pagamento Fatura', 'Pagamento Fatura'),
         ('Outros', 'Outros')
     )
