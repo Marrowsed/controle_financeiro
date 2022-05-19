@@ -5,6 +5,57 @@
 
 {% include '_nav.html' %}
 
+<div class="container">
+  <h2>Adicionar uma Saída</h2>
+  <form method="post" class="was-validated">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="nome">Descrição</label>
+      <input type="text" class="form-control" id="nome" placeholder="Digite a Descrição " name="nome" required>
+      <div class="valid-feedback">Descrição Válida !</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div>
+      <label for="tipo">Tipo</label>
+        <select name="tipo" id="tipo" required>
+            <option value="Compra">Compra</option>
+            <option value="Compra Parcelada">Compra Parcelada</option>
+            <option value="Pagamento Fatura">Pagamento Fatura</option>
+            <option value="Transferência">Transferência</option>
+            <option value="Poupança">Poupança</option>
+            <option value="Outros">Outros</option>
+        </select>
+      <div class="valid-feedback">Tipo Válido !</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+      <label for="valor">Valor Compra</label>
+      <input type="number" class="form-control" id="valor" placeholder="Digite o Valor !" step="0.01" name="valor" required>
+      <div class="valid-feedback">Valor Válido</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+      <label for="data">Data da Compra</label>
+      <input type="date" class="form-control" id="data" name="data" required>
+      <div class="valid-feedback">Data Válida !</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+        <label for="conta">Conta</label>
+        <input type="text" class="form-control" id="conta" name="conta" value="{{conta.tipo}}" readonly>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+</div>
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
 
 {% include '_boot.html' %}
 </body>
