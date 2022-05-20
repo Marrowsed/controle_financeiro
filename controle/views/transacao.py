@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.contrib import messages
 from django.shortcuts import render, redirect
 
 from controle.functions import *
@@ -29,7 +30,7 @@ def add_entrada(request, pk):
         'conta': conta, 'contas': contas
     }
 
-    return render(request, 'index.html', data)
+    return render(request, 'transacao/add_entrada.html', data)
 
 
 def add_saida(request, pk):
@@ -67,3 +68,48 @@ def add_saida(request, pk):
     }
 
     return render(request, 'transacao/add_saida.html', data)
+
+
+def show_saida(request, pk, id):
+    conta = Conta.objects.get(id=pk)
+    saida = Saida.objects.get(id=id)
+
+    if request.method == "POST":
+        saida.nome = request.POST['nome']
+        saida.tipo = request.POST['tipo']
+        saida.parcela = request.POST['parcela']
+        saida.valor = request.POST['valor']
+        saida.save()
+    data = {
+        'conta': conta, 'saida': saida
+    }
+
+    return render(request, 'transacao/show_movimento.html', data)
+
+
+def show_entrada(request, pk, id):
+    conta = Conta.objects.get(id=pk)
+    entrada = Entrada.objects.get(id=id)
+
+    if request.method == "POST":
+        entrada.nome = request.POST['nome']
+        entrada.tipo = request.POST['tipo']
+        entrada.valor = request.POST['valor']
+        entrada.save()
+    data = {
+        'conta': conta, 'entrada': entrada
+    }
+
+    return render(request, 'transacao/show_movimento.html', data)
+
+
+def delete_saida(request, pk, id):
+    conta = Conta.objects.get(id=pk)
+    saida = Saida.objects.get(id=id)
+    action_delete_saida(conta, saida)
+
+
+def delete_entrada(request, pk, id):
+    conta = Conta.objects.get(id=pk)
+    entrada = Entrada.objects.get(id=id)
+    action_delete_entrada(conta, entrada)
