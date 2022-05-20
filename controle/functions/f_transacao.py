@@ -1,10 +1,13 @@
-from django.contrib import messages
-from django.db.models import F
-from django.http import HttpResponse
 from django.shortcuts import redirect
 
-from controle.models import *
 from controle.functions.f_between import *
+
+
+def get_account_credito(model):
+    """
+    Retorna se a conta é do tipo Crédito
+    """
+    return model.tipo == "Crédito"
 
 
 # FUNCTIONS FOR SAÍDA
@@ -103,7 +106,6 @@ def actions_corrente_saida(tipo, model, value, nome, parcela, data, conta_destin
         pay_fatura(conta_destino, model, value, nome, parcela, tipo, data)
     else:
         if conta_destino == "":
-            print("WTF ?!")
             valor = float(value)
             model.valor = F('valor') - valor
             model.save()
@@ -111,6 +113,22 @@ def actions_corrente_saida(tipo, model, value, nome, parcela, data, conta_destin
         else:
             return False
     return True
+
+
+def action_delete_saida(model, saida):
+    """
+    Ação para deletar uma saída
+    """
+    if get_account_credito(model):
+        valor_final = model
+        valor_final.limite_usado = F('limite_usado') - saida.valor
+        valor_final.save()
+    else:
+        valor_final = model
+        valor_final.valor = F('valor') + saida.valor
+        valor_final.save()
+    saida.delete()
+    return redirect('index')
 
 
 # FUNCTIONS FOR ENTRADA
@@ -122,6 +140,7 @@ def create_object_entrada(name, type, final_value, date, account):
     entrada = Entrada.objects.create(nome=name, tipo=type, valor=final_value,
                                      data=date, conta=account)
     return entrada.save()
+
 
 def get_validate_error_entrada(list, type):
     """
@@ -149,6 +168,7 @@ def get_entrada_error_message(type, account_type):
         list_types = ['Salário', 'Transferência', 'Outros']
         var = get_validate_error_saida(list_types, type)
         return var
+
 
 def actions_credito_entrada(tipo, model, value, nome, data):
     """
@@ -179,3 +199,19 @@ def actions_corrente_entrada(tipo, model, value, nome, data):
     model.valor = F('valor') + valor
     model.save()
     create_object_entrada(nome, tipo, valor, data, model)
+
+
+def action_delete_entrada(model, entrada):
+    """
+    Ação para deletar uma entrada
+    """
+    if get_account_credito(model):
+        valor_final = model
+        valor_final.limite_usado = F('limite_usado') + entrada.valor
+        valor_final.save()
+    else:
+        valor_final = model
+        valor_final.valor = F('valor') - entrada.valor
+        valor_final.save()
+    entrada.delete()
+    return redirect('index')

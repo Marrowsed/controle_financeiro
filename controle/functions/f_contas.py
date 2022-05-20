@@ -31,6 +31,7 @@ def sum_parcela_final(lista):
             soma += soma_parcela
     return soma
 
+
 def sum_saida_geral(saida):
     """
     Soma das Saidas
@@ -120,7 +121,7 @@ def check_final_date(data, parcela):
     """
     Retorna a data da parcela final
     """
-    return data + timedelta(seconds=(parcela-1) * 30 * 24 * 60 * 60)
+    return data + timedelta(seconds=(parcela - 1) * 30 * 24 * 60 * 60)
 
 
 def check_is_parcelado(model, field, year, month):

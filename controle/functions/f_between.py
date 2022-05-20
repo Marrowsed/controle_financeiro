@@ -4,14 +4,23 @@ from controle.models import *
 
 
 def get_account(account):
+    """
+    Retorna a Conta
+    """
     return Conta.objects.get(id=account)
 
 
 def is_savings(account):
+    """
+    Verifica se é Poupança
+    """
     return account.tipo == "Poupança"
 
 
 def validate_increase_limite(account, value):
+    """
+    Valida se está adicionando além do limite
+    """
     limite = account.limite
     valor = float(value)
     validate = limite + valor
@@ -41,6 +50,9 @@ def create_object_entrada(name, type, final_value, date, account):
 
 
 def send_to_account(to_account, account, value, name, parcela, type, date):
+    """
+    Transferências entre contas (PIX)
+    """
     conta = get_account(to_account)
     if not is_savings(conta):
         account.valor = F('valor') - value
@@ -52,6 +64,9 @@ def send_to_account(to_account, account, value, name, parcela, type, date):
 
 
 def apply_savings(savings, account, value, name, parcela, type, date):
+    """
+    Aplicações em poupanças
+    """
     poupanca = get_account(savings)
     if is_savings(poupanca):
         account.valor = F('valor') - value
@@ -63,6 +78,9 @@ def apply_savings(savings, account, value, name, parcela, type, date):
 
 
 def pay_fatura(to_account, account, value, name, parcela, type, date):
+    """
+    Pagamento de faturas
+    """
     conta = get_account(to_account)
     if not is_savings(conta):
         if validate_increase_limite(conta, value):
