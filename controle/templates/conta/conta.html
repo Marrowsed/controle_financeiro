@@ -141,7 +141,7 @@
   {% for e in entrada %}
     <tr>
       <th scope="row">{{ e.tipo }}</th>
-      <td>{{e.nome}}</td>
+      <td><a href="{% url 'mostra_entrada' conta.id e.id %}">{{e.nome}}</a></td>
       <td>R${{e.valor}}</td>
       <td>{{e.data}}</td>
     </tr>
@@ -165,7 +165,7 @@
   {% for s in saida %}
     <tr>
       <th scope="row">{{ s.tipo }}</th>
-      <td>{{s.nome}}</td>
+      <td><a href="{% url 'mostra_saida' conta.id s.id %}">{{s.nome}}</a></td>
       <td>R${{s.valor}}</td>
       {% if s.parcela >= 1 %}
       <td>1/{{s.parcela}}</td>
@@ -192,7 +192,7 @@
   {% for p in parcela %}
     <tr>
       <th scope="row">{{ p.tipo }}</th>
-      <td>{{p.nome}}</td>
+      <td><a href="{% url 'mostra_saida' conta.id p.id %}">{{p.nome}}</a></td>
       <td>R${{p.valor}}</td>
       {% if p.parcela >= 1 %}
       <td>1/{{p.parcela}}</td>
