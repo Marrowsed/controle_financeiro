@@ -10,32 +10,32 @@ def get_account_credito(model):
     return model.tipo == "Crédito"
 
 
-# FUNCTIONS FOR SAÍDA
-def get_validate_error_saida(list, type):
+def get_validate_error(list_type, action_type):
     """
     Valida se a lista de ações do tipo de conta são válidas !
     """
-    if not [i for i in list if i in type]:
+    if not [i for i in list_type if i in action_type]:
         return True
     else:
         return False
 
 
-def get_saida_error_message(type, account_type):
+# FUNCTIONS FOR SAÍDA
+def get_saida_error_message(action_type, account_type):
     """
     Retorna se as ações são válidas ou não
     """
     if account_type == "Crédito":
         list_types = ['Compra Parcelada']
-        var = get_validate_error_saida(list_types, type)
+        var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Poupança":
         list_types = ['Transferência']
-        var = get_validate_error_saida(list_types, type)
+        var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Corrente":
         list_types = ['Compra', 'Pagamento Fatura', 'Transferência', 'Poupança', 'Outros']
-        var = get_validate_error_saida(list_types, type)
+        var = get_validate_error(list_types, action_type)
         return var
 
 
@@ -142,31 +142,21 @@ def create_object_entrada(name, type, final_value, date, account):
     return entrada.save()
 
 
-def get_validate_error_entrada(list, type):
-    """
-    Valida se a lista de ações do tipo de conta são válidas !
-    """
-    if not [i for i in list if i in type]:
-        return True
-    else:
-        return False
-
-
-def get_entrada_error_message(type, account_type):
+def get_entrada_error_message(action_type, account_type):
     """
     Retorna se as ações são válidas ou não
     """
     if account_type == "Crédito":
         list_types = ['Pagamento Fatura']
-        var = get_validate_error_saida(list_types, type)
+        var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Poupança":
-        list_types = ['Transferência']
-        var = get_validate_error_saida(list_types, type)
+        list_types = ['Poupança']
+        var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Corrente":
         list_types = ['Salário', 'Transferência', 'Outros']
-        var = get_validate_error_saida(list_types, type)
+        var = get_validate_error(list_types, action_type)
         return var
 
 
