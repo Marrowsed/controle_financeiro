@@ -59,7 +59,7 @@ def edita_conta(request, pk):
     conta = Conta.objects.get(id=pk)
     if request.method == 'POST':
         if conta.tipo == "Crédito":
-            conta.limite = request.POST['limite']
+            conta.limite = float(request.POST['limite'])
         else:
             conta.valor = request.POST['valor']
         conta.save()
