@@ -1,4 +1,5 @@
 from django.db.models import F
+from django.shortcuts import redirect
 
 from controle.models import *
 
@@ -12,9 +13,23 @@ def get_account(account):
 
 def is_savings(account):
     """
-    Verifica se é Poupança
+    Verifica se é Conta Poupança
     """
     return account.tipo == "Poupança"
+
+
+def is_credito(account):
+    """
+    Verifica se é Conta Crédito
+    """
+    return account.tipo == "Crédito"
+
+
+def is_corrente(account):
+    """
+    Verifica se é Conta Corrente
+    """
+    return account.tipo == "Corrente"
 
 
 def validate_increase_limite(account, value):
@@ -54,13 +69,15 @@ def send_to_account(to_account, account, value, name, parcela, type, date):
     Transferências entre contas (PIX)
     """
     conta = get_account(to_account)
-    if not is_savings(conta):
+    if is_corrente(conta):
         account.valor = F('valor') - value
         conta.valor = F('valor') + value
         create_object_saida(name, type, parcela, value, date, account)
         create_object_entrada(name, type, value, date, conta)
         account.save()
         conta.save()
+    else:
+        return False
 
 
 def apply_savings(savings, account, value, name, parcela, type, date):
@@ -75,6 +92,8 @@ def apply_savings(savings, account, value, name, parcela, type, date):
         create_object_entrada(name, type, value, date, poupanca)
         account.save()
         poupanca.save()
+    else:
+        return False
 
 
 def pay_fatura(to_account, account, value, name, parcela, type, date):
@@ -82,11 +101,12 @@ def pay_fatura(to_account, account, value, name, parcela, type, date):
     Pagamento de faturas
     """
     conta = get_account(to_account)
-    if not is_savings(conta):
-        if validate_increase_limite(conta, value):
-            account.valor = F('valor') - value
-            conta.limite = F('limite') + value
-            create_object_saida(name, type, parcela, value, date, account)
-            create_object_entrada(name, type, value, date, conta)
-            account.save()
-            conta.save()
+    if is_credito(conta) and validate_increase_limite(conta, value):
+        account.valor = F('valor') - value
+        conta.limite = F('limite') + value
+        create_object_saida(name, type, parcela, value, date, account)
+        create_object_entrada(name, type, value, date, conta)
+        account.save()
+        conta.save()
+    else:
+        return False
