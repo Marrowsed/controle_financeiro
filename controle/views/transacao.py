@@ -15,15 +15,14 @@ def add_entrada(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
-        conta_destino = request.POST['conta_destino']
-        if get_saida_error_message(tipo, tipo_conta):
+        if get_entrada_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         elif tipo_conta == "Crédito":
-            actions_credito_saida(tipo, conta, valor_final, nome, data)
+            actions_credito_entrada(tipo, conta, valor_final, nome, data)
         elif tipo_conta == "Poupança":
-            actions_poupanca_saida(tipo, conta, valor_final, nome, data)
+            actions_poupanca_entrada(tipo, conta, valor_final, nome, data)
         elif tipo_conta == "Corrente":
-            actions_corrente_saida(tipo, conta, valor_final, nome, data)
+            actions_corrente_entrada(tipo, conta, valor_final, nome, data)
         return redirect('index')
 
     data = {
@@ -44,7 +43,6 @@ def add_saida(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
-        conta_destino = request.POST['conta_destino']
         if get_saida_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         else:
@@ -55,6 +53,7 @@ def add_saida(request, pk):
                 actions_poupanca_saida(tipo, conta, valor_final, nome, parcela, data)
                 return redirect('index')
             elif tipo_conta == "Corrente" and validate_decrease_value(conta, valor_final):
+                conta_destino = request.POST['conta_destino']
                 a = actions_corrente_saida(tipo, conta, valor_final, nome, parcela, data, conta_destino)
                 if a:
                     return redirect('index')
