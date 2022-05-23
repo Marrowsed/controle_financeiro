@@ -3,6 +3,10 @@ from .views import *
 
 urlpatterns = [
     path('', index, name="index"),
+    path('bancos', list_bancos, name="bancos"),
+    path('bancos/adicionar', add_banco, name="adiciona_banco"),
+    path('banco/<str:pk>/edita', edita_banco, name="edita_banco"),
+    path('banco/<str:pk>/deleta', deleta_banco, name="deleta_banco"),
     path('conta/<str:pk>', conta, name="conta"),
     path('conta/<str:pk>/edita', edita_conta, name="edita_conta"),
     path('conta/<str:pk>/deleta', deleta_conta, name="deleta_conta"),
