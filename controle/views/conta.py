@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
 
 from controle.models import *
 from controle.functions import *
@@ -53,6 +54,27 @@ def conta(request, pk):
             '''
 
     return render(request, 'conta/conta.html', data)
+
+
+def add_conta(request):
+    banco = Banco.objects.all()
+    data = {
+        'banco': banco
+    }
+    if request.method == 'POST':
+        tipo = request.POST['tipo']
+        limite = request.POST['limite']
+        valor = request.POST['valor']
+        banco = request.POST['banco']
+        if Conta.objects.filter(tipo=tipo, banco=banco):
+            messages.error(request, "Conta já existente !", extra_tags="alert alert-danger")
+        else:
+            b = Banco.objects.get(id=banco)
+            conta = Conta.objects.create(tipo=tipo, limite=limite, limite_usado=0, limite_restante=limite,
+                                         valor=valor, banco=b)
+            conta.save()
+            return redirect('index')
+    return render(request, 'conta/add_conta.html', data)
 
 
 def edita_conta(request, pk):
