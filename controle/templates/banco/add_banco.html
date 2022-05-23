@@ -1,0 +1,24 @@
+{% include '_head.html' %}
+</head>
+<body>
+{% include '_nav.html' %}
+
+<div class="container">
+  <h2>Adicionar Banco</h2>
+  <form method="post" class="was-validated">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input type="text" class="form-control" id="nome" placeholder="Digite o nome do Banco" name="nome" required>
+    </div>
+    <div class="form-group">
+        <label for="foto">Foto do Banco</label>
+        <input type="file" class="form_control" id="foto" name="foto" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+</div>
+
+{% include '_boot.html' %}
+</body>
+</html>

@@ -1,0 +1,34 @@
+{% include '_head.html' %}
+<style>
+  th, td {
+  text-align: center;
+  }
+</style>
+</head>
+<body>
+{% include '_nav.html' %}
+
+
+<a href="{% url 'adiciona_banco' %}" type="button" class="btn btn-success mx-auto rounded-pill">Adicionar Banco</a>
+<h1 class="mx-auto">Bancos</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Nome Banco</th>
+      <th scope="col" colspan="2">Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for b in banco %}
+    <tr>
+      <th scope="row">{{b.nome}}</th>
+      <td><a href="{% url 'edita_banco' b.id%}" type="button" class="btn btn-info">Editar</a></td>
+      <td><a href="{% url 'deleta_banco' b.id%}" type="button" class="btn btn-danger">Deletar</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include '_boot.html' %}
+</body>
+</html>

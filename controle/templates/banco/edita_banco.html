@@ -1,0 +1,32 @@
+{% include '_head.html' %}
+</head>
+<body>
+{% include '_nav.html' %}
+
+<div class="container">
+  <h2>Editar {{banco}}</h2>
+  <form method="post" class="was-validated" enctype="multipart/form-data">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="nome">Nome</label>
+      <input type="text" class="form-control" id="nome" value="{{banco.nome}}" name="nome">
+    </div>
+    <div class="form-group">
+        <label for="foto">Foto do Banco</label>
+        {% if banco.foto.url != "" %}
+        <img src="{{banco.foto.url}}" class="img-fluid" alt="Foto do Banco" id="foto" name="foto">
+        {% else %}
+        <img src="#" class="img-fluid" alt="Foto do Banco Não Existente" id="foto" name="foto">
+        {% endif %}
+    </div>
+    <div class="form-group">
+        <label for="imagem">Editar Foto do Banco</label>
+        <input type="file" class="form_control" id="imagem" name="imagem">
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+</div>
+
+{% include '_boot.html' %}
+</body>
+</html>
