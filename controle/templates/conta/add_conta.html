@@ -1,0 +1,55 @@
+{% include '_head.html' %}
+</head>
+<body>
+{% include '_nav.html' %}
+
+<div class="container">
+  <h2>Adicionar Conta</h2>
+  <form method="post" class="was-validated">
+      {% csrf_token %}
+    <div class="form-group">
+      <label for="tipo">Tipo</label>
+        <select name="tipo" id="tipo" required>
+            <option value="">----------</option>
+            <option value="Corrente">Corrente</option>
+            <option value="Crédito">Crédito</option>
+            <option value="Poupança">Poupança</option>
+        </select>
+      <div class="valid-feedback">Tipo Válido !</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+      <label for="limite">Limite</label>
+      <input type="number" class="form-control" id="limite" placeholder="0 se for uma Conta Corrente ou Poupança !" name="limite" required>
+      <div class="valid-feedback">Limite Válido</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+      <label for="valor">Valor</label>
+      <input type="number" class="form-control" id="valor" placeholder="0 se for uma Conta Crédito !" name="valor" required>
+      <div class="valid-feedback">Valor Válido</div>
+      <div class="invalid-feedback">Preencha o campo !</div>
+    </div>
+    <div class="form-group">
+      <label for="banco">Banco</label>
+      <select name="banco" id="banco" required>
+        <option value="">----------</option>
+        {% for b in banco %}
+        <option value="{{b.id}}">{{b}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+</div>
+
+{% include '_boot.html' %}
+</body>
+</html>
