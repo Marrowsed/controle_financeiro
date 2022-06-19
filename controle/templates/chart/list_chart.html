@@ -1,0 +1,35 @@
+{% include '_head.html' %}
+<style>
+  th, td {
+  text-align: center;
+  }
+</style>
+</head>
+<body>
+{% include '_nav.html' %}
+
+
+<h1 class="mx-auto">Contas</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Tipo</th>
+      <th scope="col">Banco</th>
+      <th scope="col" colspan="2">Visualizar Gráfico por Mês</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in conta %}
+    <tr>
+      <th scope="row">{{ c.tipo }}</th>
+
+      <td>{{c.banco}}</td>
+      <td><a href="{% url 'account_grafico' c.id%}" type="button" class="btn btn-info">Visualizar</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% include '_boot.html' %}
+</body>
+</html>

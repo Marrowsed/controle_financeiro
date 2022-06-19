@@ -1,0 +1,107 @@
+{% include '_head.html' %}
+{% load humanize %}
+<style>
+  th, td {
+  text-align: center;
+  }
+
+</style>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+</head>
+<body>
+{% include '_nav.html' %}
+
+
+<h1 class="mx-auto">Conta {{conta.tipo}} {{conta.banco}}</h1>
+
+<section class="container-md border border-1 shadow-sm p-3 my-3">
+    <form method="GET" class="form">
+        <p class="form-message">Selecione o mês</p>
+        <input type="month" id="month" name="mes" value="{{pesquisa}}" required>
+        <button type="submit" class="btn btn-info">Escolher o Mês</button>
+      </form>
+</section>
+
+<div id="container" style="width: 75%;">
+    <canvas id="myChart"></canvas>
+</div>
+
+{% if conta.tipo == "Crédito" %}
+<script>
+// jquery function
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Limite Usado', 'Limite Restante'],
+                datasets: [{
+                    label: 'Comparativo de Uso',
+                    data: [{{conta.limite_usado|floatformat:0|intcomma}}*1000, {{conta.limite_restante|floatformat:0|intcomma}}*1000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+
+                    ],
+                    borderWidth: 1
+                        }]
+                  },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{% else %}
+<script>
+// jquery function
+$(document).ready(function(){
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Mês Passado', 'Mês atual'],
+                datasets: [{
+                    label: 'Comparativo de Uso',
+                    data: [{{conta.valor|floatformat:0|intcomma}}, 15000],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+
+                    ],
+                    borderWidth: 1
+                        }]
+                  },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+});
+    });
+</script>
+{% endif%}
+
+{% include '_boot.html' %}
+</body>
+</html>

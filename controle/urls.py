@@ -18,6 +18,9 @@ urlpatterns = [
     path('conta/<str:pk>/saida/<str:id>/deleta', delete_saida, name="deleta_saida"),
     path('contas', list_contas, name="contas"),
     path('contas/adicionar', add_conta, name="adiciona_conta"),
+    path('graficos', list_accounts_chart, name="list_graficos"),
+    path('graficos/<str:pk>', account_chart, name="account_grafico"),
+
 
 
 
