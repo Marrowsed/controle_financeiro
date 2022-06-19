@@ -7,11 +7,11 @@ from controle.models import *
 def list_bancos(request):
     banco = Banco.objects.all()
 
-
     data = {
         'banco': banco
     }
     return render(request, 'banco/list_bancos.html', data)
+
 
 def edita_banco(request, pk):
     banco = Banco.objects.get(id=pk)
