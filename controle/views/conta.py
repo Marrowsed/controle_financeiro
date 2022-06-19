@@ -16,8 +16,10 @@ def index(request):
 def conta(request, pk):
     pesquisa = f"{datetime.now().year}-{datetime.now().month:02}"
     conta = Conta.objects.get(id=pk)
+    actual_saida = filter_by_model_date_conta(Saida, datetime.now().month, datetime.now().year, conta)
+    actual_entrada = filter_by_model_date_conta(Entrada, datetime.now().month, datetime.now().year, conta)
     data = {
-        'pesquisa': pesquisa, 'conta': conta
+        'pesquisa': pesquisa, 'conta': conta, 'entrada': actual_entrada, 'saida': actual_saida
     }
     if request.GET.get('mes'):
         pesquisa = request.GET.get('mes')
