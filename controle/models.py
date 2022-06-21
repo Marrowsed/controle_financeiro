@@ -39,6 +39,7 @@ class Entrada(models.Model):
         ('Transferência', 'Transferência'),
         ('Poupança', 'Poupança'),
         ('Pagamento Fatura', 'Pagamento Fatura'),
+        ('Agendamento', 'Agendamento'),
         ('Outros', 'Outros')
     )
     nome = models.CharField(max_length=200)
@@ -57,6 +58,7 @@ class Saida(models.Model):
         ('Compra Parcelada', 'Compra Parcelada'),
         ('Pagamento Fatura', 'Pagamento Fatura'),
         ('Transferência', 'Transferência'),
+        ('Agendamento', 'Agendamento'),
         ('Poupança', 'Poupança'),
         ('Outros', 'Outros')
     )
@@ -69,6 +71,7 @@ class Saida(models.Model):
 
     def __str__(self):
         return self.nome
+
 
 '''
 class Extrato(models.Model):
