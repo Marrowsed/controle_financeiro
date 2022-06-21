@@ -6,7 +6,7 @@
 {% include '_nav.html' %}
 
 <div class="container">
-  <h2>Adicionar uma Saída</h2>
+  <h2>Adicionar uma Entrada</h2>
   <form method="post" class="was-validated">
       {% csrf_token %}
     <div class="form-group">
@@ -22,6 +22,7 @@
             <option value="Transferência">Transferência</option>
             <option value="Poupança">Poupança</option>
             <option value="Pagamento Fatura">Pagamento Fatura</option>
+            <option value="Agendamento">Agendamento</option>
             <option value="Outros">Outros</option>
         </select>
       <div class="valid-feedback">Tipo Válido !</div>

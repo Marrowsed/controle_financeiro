@@ -10,8 +10,12 @@
 <body>
 {% include '_nav.html' %}
 <div>
-<h1>{{conta.banco}} - {{conta.tipo}}</h1>
-
+  <section>
+    <div class="row mx-auto d-block">
+      <h3 class="text-right mr-3">Data: {{date}}</h3>
+      <h1>{{conta.banco}} - {{conta.tipo}}</h1>
+    </div>
+  </section>
 <section class="container-md border border-1 shadow-sm p-3 my-3">
     <form method="GET" class="form">
         <p class="form-message">Selecione o mês</p>
@@ -205,6 +209,14 @@
   </tbody>
 </table>
 </div>
+
+{% for a in teste %}
+    {% if date >= a.data %}
+    <p>{{a.data}}</p>
+    {% else %}
+    <p>Agendado</p>
+    {%endif%}
+    {%endfor%}
 
 {% include '_boot.html' %}
 </body>
