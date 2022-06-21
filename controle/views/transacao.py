@@ -15,21 +15,17 @@ def add_entrada(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
-        final_data = str(data)
-        actual_data = str(datetime.now())
         if get_entrada_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         elif tipo_conta == "Crédito":
             actions_credito_entrada(tipo, conta, valor_final, nome, data)
+            return redirect(f"/conta/{conta.id}")
         elif tipo_conta == "Poupança":
-            if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
-                messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
             actions_poupanca_entrada(tipo, conta, valor_final, nome, data)
+            return redirect(f"/conta/{conta.id}")
         elif tipo_conta == "Corrente":
-            if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
-                messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
             actions_corrente_entrada(tipo, conta, valor_final, nome, data)
-        return redirect('index')
+            return redirect(f"/conta/{conta.id}")
 
     data = {
         'conta': conta, 'contas': contas
@@ -49,26 +45,21 @@ def add_saida(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
-        final_data = str(data)
-        actual_data = str(datetime.now())
         if get_saida_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         else:
             if tipo_conta == "Crédito" and validate_decrease_limite(conta, valor_final):
                 actions_credito_saida(tipo, conta, valor_final, nome, parcela, data)
-                return redirect('index')
+                return redirect(f"/conta/{conta.id}")
             elif tipo_conta == "Poupança" and validate_decrease_value(conta, valor_final):
-                if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
-                    messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
                 actions_poupanca_saida(tipo, conta, valor_final, nome, parcela, data)
-                return redirect('index')
+                return redirect(f"/conta/{conta.id}")
             elif tipo_conta == "Corrente" and validate_decrease_value(conta, valor_final):
-                if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
-                    messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
+
                 conta_destino = request.POST['conta_destino']
                 a = actions_corrente_saida(tipo, conta, valor_final, nome, parcela, data, conta_destino)
                 if a:
-                    return redirect('index')
+                    return redirect(f"/conta/{conta.id}")
                 else:
                     messages.error(request, "Operação não permitida !", extra_tags="alert alert-danger")
             else:
@@ -118,9 +109,11 @@ def delete_saida(request, pk, id):
     conta = Conta.objects.get(id=pk)
     saida = Saida.objects.get(id=id)
     action_delete_saida(conta, saida)
+    return redirect('index')
 
 
 def delete_entrada(request, pk, id):
     conta = Conta.objects.get(id=pk)
     entrada = Entrada.objects.get(id=id)
     action_delete_entrada(conta, entrada)
+    return redirect('index')
