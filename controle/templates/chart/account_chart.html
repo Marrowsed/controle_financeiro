@@ -21,16 +21,17 @@
 <section class="container-md border border-1 shadow-sm p-3 my-3">
     <form method="GET" class="form">
         <p class="form-message">Selecione o mês</p>
-        <input type="month" id="month" name="mes" value="{{pesquisa}}" required>
+        <input type="month" id="month" name="periodo" value="{{search}}" required>
         <button type="submit" class="btn btn-info">Escolher o Mês</button>
       </form>
 </section>
+
 
 <div id="container" style="width: 75%;">
     <canvas id="myChart"></canvas>
 </div>
 
-{% if conta.tipo == "Crédito" %}
+
 <script>
 // jquery function
 $(document).ready(function(){
@@ -38,10 +39,10 @@ $(document).ready(function(){
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Limite Usado', 'Limite Restante'],
+                labels: ['Saída', 'Entrada'],
                 datasets: [{
-                    label: 'Comparativo de Uso',
-                    data: [{{conta.limite_usado|floatformat:0|intcomma}}*1000, {{conta.limite_restante|floatformat:0|intcomma}}*1000],
+                    label: 'Soma de R$',
+                    data: [{{sum_minus}}, {{sum_entries}}],
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',
                         'rgba(54, 162, 235, 0.2)',
@@ -65,42 +66,7 @@ $(document).ready(function(){
 });
     });
 </script>
-{% else %}
-<script>
-// jquery function
-$(document).ready(function(){
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Mês Passado', 'Mês atual'],
-                datasets: [{
-                    label: 'Comparativo de Uso',
-                    data: [{{conta.valor|floatformat:0|intcomma}}, 15000],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
 
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-
-                    ],
-                    borderWidth: 1
-                        }]
-                  },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-});
-    });
-</script>
-{% endif%}
 
 {% include '_boot.html' %}
 </body>
