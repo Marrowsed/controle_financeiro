@@ -2,6 +2,16 @@ from django.shortcuts import redirect
 
 from controle.functions.f_between import *
 
+def check_schedule(data):
+    """
+    Checa se é um agendamento
+    """
+    final_data = str(data)
+    actual_data = str(datetime.now())
+    if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
+        return True
+    else:
+        return False
 
 def get_account_credito(model):
     """
@@ -34,7 +44,7 @@ def get_saida_error_message(action_type, account_type):
         var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Corrente":
-        list_types = ['Compra', 'Pagamento Fatura', 'Transferência', 'Poupança', 'Outros']
+        list_types = ['Compra', 'Pagamento Fatura', 'Transferência', 'Poupança', 'Outros', 'Agendamento']
         var = get_validate_error(list_types, action_type)
         return var
 
@@ -68,6 +78,15 @@ def create_object_saida(name, type, parcela, final_value, date, account):
     Cria o objeto Saída
     """
     saida = Saida.objects.create(nome=name, tipo=type, parcela=parcela,
+                                 valor=final_value, data=date,
+                                 conta=account)
+    return saida.save()
+
+def create_object_saida_schedule(name, parcela, final_value, date, account):
+    """
+    Cria o objeto Saída Agendado
+    """
+    saida = Saida.objects.create(nome=name, tipo="Agendamento", parcela=parcela,
                                  valor=final_value, data=date,
                                  conta=account)
     return saida.save()
@@ -106,10 +125,14 @@ def actions_corrente_saida(tipo, model, value, nome, parcela, data, conta_destin
         pay_fatura(conta_destino, model, value, nome, parcela, tipo, data)
     else:
         if conta_destino == "":
-            valor = float(value)
-            model.valor = F('valor') - valor
-            model.save()
-            create_object_saida(nome, tipo, parcela, valor, data, model)
+            if check_schedule(data):
+                valor = float(value)
+                create_object_saida_schedule(nome, parcela, valor, data, model)
+            else:
+                valor = float(value)
+                model.valor = F('valor') - valor
+                model.save()
+                create_object_saida(nome, tipo, parcela, valor, data, model)
         else:
             return False
     return True
@@ -128,7 +151,7 @@ def action_delete_saida(model, saida):
         valor_final.valor = F('valor') + saida.valor
         valor_final.save()
     saida.delete()
-    return redirect('index')
+
 
 
 # FUNCTIONS FOR ENTRADA
@@ -138,6 +161,14 @@ def create_object_entrada(name, type, final_value, date, account):
     Cria o objeto Entrada
     """
     entrada = Entrada.objects.create(nome=name, tipo=type, valor=final_value,
+                                     data=date, conta=account)
+    return entrada.save()
+
+def create_object_entrada_schedule(name, final_value, date, account):
+    """
+    Cria o objeto Entrada Agendado
+    """
+    entrada = Entrada.objects.create(nome=name, tipo="Agendamento", valor=final_value,
                                      data=date, conta=account)
     return entrada.save()
 
@@ -155,7 +186,7 @@ def get_entrada_error_message(action_type, account_type):
         var = get_validate_error(list_types, action_type)
         return var
     elif account_type == "Corrente":
-        list_types = ['Salário', 'Transferência', 'Outros']
+        list_types = ['Salário', 'Transferência', 'Outros', "Agendamento"]
         var = get_validate_error(list_types, action_type)
         return var
 
@@ -185,10 +216,14 @@ def actions_corrente_entrada(tipo, model, value, nome, data):
     """
     Ações na Conta tipo Corrente
     """
-    valor = float(value)
-    model.valor = F('valor') + valor
-    model.save()
-    create_object_entrada(nome, tipo, valor, data, model)
+    if check_schedule(data):
+        valor = float(value)
+        create_object_entrada_schedule(nome, valor, data, model)
+    else:
+        valor = float(value)
+        model.valor = F('valor') + valor
+        model.save()
+        create_object_entrada(nome, tipo, valor, data, model)
 
 
 def action_delete_entrada(model, entrada):
@@ -204,4 +239,4 @@ def action_delete_entrada(model, entrada):
         valor_final.valor = F('valor') - entrada.valor
         valor_final.save()
     entrada.delete()
-    return redirect('index')
+
