@@ -14,13 +14,17 @@ def index(request):
 
 
 def conta(request, pk):
+    actual_date = datetime.now().date()
     pesquisa = f"{datetime.now().year}-{datetime.now().month:02}"
     conta = Conta.objects.get(id=pk)
+    agendado = Conta.objects.get(id=pk)
     actual_saida = filter_by_model_date_conta(Saida, datetime.now().month, datetime.now().year, conta)
     actual_entrada = filter_by_model_date_conta(Entrada, datetime.now().month, datetime.now().year, conta)
     data = {
-        'pesquisa': pesquisa, 'conta': conta, 'entrada': actual_entrada, 'saida': actual_saida
+        'pesquisa': pesquisa, 'conta': conta, 'entrada': actual_entrada, 'saida': actual_saida, 'date': actual_date,
+        'teste': actual_saida
     }
+
     if request.GET.get('mes'):
         pesquisa = request.GET.get('mes')
         ano, mes = pesquisa.split('-')
@@ -37,6 +41,19 @@ def conta(request, pk):
         soma_saida = sum_saida(data_saida, list_parcelado, data_saida)
         soma_entrada = sum_faturas(data_entrada)
         soma_fatura = soma_saida - soma_entrada
+
+        for s in data_saida:
+            if s.tipo == "Agendamento" and actual_date >= s.data:
+                agendado.valor = F('valor') - s.valor
+                agendado.save()
+                s.tipo = "Outros"
+                s.save()
+        for e in data_entrada:
+            if e.tipo == "Agendamento" and actual_date >= e.data:
+                agendado.valor = F('valor') + e.valor
+                agendado.save()
+                e.tipo = "Outros"
+                e.save()
         data.update({
             'saida': data_saida, 'fatura': soma_fatura, 'entrada': data_entrada
         })
