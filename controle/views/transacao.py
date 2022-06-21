@@ -15,13 +15,19 @@ def add_entrada(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
+        final_data = str(data)
+        actual_data = str(datetime.now())
         if get_entrada_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         elif tipo_conta == "Crédito":
             actions_credito_entrada(tipo, conta, valor_final, nome, data)
         elif tipo_conta == "Poupança":
+            if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
+                messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
             actions_poupanca_entrada(tipo, conta, valor_final, nome, data)
         elif tipo_conta == "Corrente":
+            if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
+                messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
             actions_corrente_entrada(tipo, conta, valor_final, nome, data)
         return redirect('index')
 
@@ -43,6 +49,8 @@ def add_saida(request, pk):
         valor_final = request.POST['valor']
         data = request.POST['data']
         tipo_conta = request.POST['conta']
+        final_data = str(data)
+        actual_data = str(datetime.now())
         if get_saida_error_message(tipo, tipo_conta):
             messages.error(request, "Tipo de Operação não Permitida !", extra_tags="alert alert-danger")
         else:
@@ -50,9 +58,13 @@ def add_saida(request, pk):
                 actions_credito_saida(tipo, conta, valor_final, nome, parcela, data)
                 return redirect('index')
             elif tipo_conta == "Poupança" and validate_decrease_value(conta, valor_final):
+                if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
+                    messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
                 actions_poupanca_saida(tipo, conta, valor_final, nome, parcela, data)
                 return redirect('index')
             elif tipo_conta == "Corrente" and validate_decrease_value(conta, valor_final):
+                if datetime.fromisoformat(final_data) >= datetime.fromisoformat(actual_data):
+                    messages.info(request, "Operação Agendada !", extra_tags="alert alert-info")
                 conta_destino = request.POST['conta_destino']
                 a = actions_corrente_saida(tipo, conta, valor_final, nome, parcela, data, conta_destino)
                 if a:
