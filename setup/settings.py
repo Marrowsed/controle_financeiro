@@ -86,24 +86,24 @@ DATABASES = {
 }
 
 
-DATABASES = {
-    'default': config(
-        'DATABASE_URL',
-        default='sqlite:///' + BASE_DIR.child('db.sqlite3'),
-        cast=db_url
-    )
-}
 
-'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get('POSTGRES_NAME'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'host.docker.internal',
+        'HOST': 'db',
         'PORT': 5432,
     }
+}
+'''
+DATABASES = {
+    'default': config(
+        'DATABASE_URL',
+        default='sqlite:///' + BASE_DIR.child('db.sqlite3'),
+        cast=db_url
+    )
 }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
